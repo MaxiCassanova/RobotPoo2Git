@@ -8,14 +8,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import ar.edu.POO2.exceptions.DoubleOrientationCharacterException;
+import ar.edu.POO2.exceptions.*;
 
 public class ProcesadorDeDatos {
 
     public ProcesadorDeDatos() {
     }
 
-    public void procesarDatos(String pathInput) throws IOException {
+    public void procesarDatos(String pathInput) {
         BufferedReader br = null;
         Robot robot = null;
         Cuadricula cuadricula = null;
@@ -49,6 +49,12 @@ public class ProcesadorDeDatos {
                     } catch (DoubleOrientationCharacterException e) {
                         System.out.println("Error en el archivo de entrada");
                         throw e;
+                    } catch (ExceedsTheMaximumGrid e) {
+                        System.out.println("La columna y fila inicial deben ser mayor a 0 y menor a " + Cuadricula.getMAX_ARGUMENT_GRID());
+                        throw e;
+                    } catch (IllegalStartingPosition e) {
+                        System.out.println("La posicion inicial debe ser mayor a 0 y menor a el maximo de la cuadricula");
+                        throw e;
                     } catch (ArrayIndexOutOfBoundsException e) {
                         System.out.println("Faltan datos en el archivo de entrada");
                         throw e;
@@ -58,7 +64,7 @@ public class ProcesadorDeDatos {
                 if (contador == 2) {
                     try {
                         if (linea.length() % 2 != 0)
-                            throw new RuntimeException("La entrada de comandos es inválida");
+                            throw new NotEvenCommandsLine();
                         comandos = new ArrayList<Comando>(linea.length() / 2);
                         for (int i = 0; i < linea.length(); i += 2) {
                             char orden = linea.charAt(i);
@@ -68,25 +74,35 @@ public class ProcesadorDeDatos {
                     } catch (NumberFormatException e) {
                         System.out.println("Error en el archivo de entrada: Los datos de comandos deben ser numéricos");
                         throw e;
-                    } catch (IllegalArgumentException e) {
-                        System.out.println("Error en el archivo de entrada");
+                    } catch (ExceedsMaximumCommandsExeption e) {
+                        System.out.println("Error en el archivo de entrada: Los comandos no pueden exceder el máximo de " + Comando.MAX_COMANDOS);
                         throw e;
-                    } catch (RuntimeException e) {
-                        System.out.println("Error en el archivo de entrada");
+                    } catch(NotEvenCommandsLine e) {
+                        System.out.println("Error en el archivo de entrada: Los comandos deben ser pares");
+                        throw e;
+                    } catch (IllegalOrderExeption e) {
+                        System.out.println("Error en el archivo de entrada: Los comandos deben ser A o R");
                         throw e;
                     }
                 }
-                if (contador > 2)
-                    throw new RuntimeException("El archivo de entrada es inválido, debe tener maximo 2 líneas");
+                if (contador > 2){
+                    System.out.println("El archivo de entrada debe tener 2 lineas");
+                    throw new IllegalNumberOfLineExeption();
+                }
 
                 contador++;
             }
         } catch (IOException e) {
             System.out.println("Error al leer el archivo");
-            throw e;
+            throw new RuntimeException("Error al leer el archivo");
         } finally {
             if (br != null) {
-                br.close();
+                try {
+                    br.close();
+                } catch (IOException e) {
+                    System.out.println("Error al cerrar el archivo");
+                    throw new RuntimeException("Error al cerrar el archivo");
+                }
             } 
         }
         this.procesarRobot(robot, comandos);

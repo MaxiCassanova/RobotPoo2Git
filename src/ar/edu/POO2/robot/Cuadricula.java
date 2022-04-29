@@ -1,5 +1,7 @@
 package ar.edu.POO2.robot;
 
+import ar.edu.POO2.exceptions.ExceedsTheMaximumGrid;
+
 public class Cuadricula {
 
     private int xColumnaMax;
@@ -8,10 +10,10 @@ public class Cuadricula {
 
     public Cuadricula(int xColumnaMax, int yFilaMax) {
         if (xColumnaMax <= 0 || yFilaMax <= 0) {
-            throw new IllegalArgumentException("La columna y fila inicial deben ser mayor a 0");
+            throw new ExceedsTheMaximumGrid();
         }
         if (xColumnaMax >= MAX_ARGUMENT_GRID || yFilaMax >= MAX_ARGUMENT_GRID) {
-            throw new IllegalArgumentException("La columna y fila inicial deben ser menor a " + MAX_ARGUMENT_GRID);
+            throw new ExceedsTheMaximumGrid();
         }
         this.xColumnaMax = xColumnaMax;
         this.yFilaMax = yFilaMax;

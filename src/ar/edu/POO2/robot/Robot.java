@@ -1,5 +1,9 @@
 package ar.edu.POO2.robot;
 
+import ar.edu.POO2.exceptions.IllegalOrientationExeption;
+import ar.edu.POO2.exceptions.IllegalStartingPosition;
+import ar.edu.POO2.exceptions.InvalidCommandExeption;
+
 public class Robot {
 
     private int xColumna;
@@ -8,13 +12,13 @@ public class Robot {
     private Cuadricula cuadricula;
 
     public Robot(int xColumna, int yFila, char orientacion, Cuadricula cuadricula) {
-        if(xColumna <= 0 || yFila <= 0) throw new IllegalArgumentException("La columna y fila inicial deben ser mayor a 0");
-        if(xColumna > cuadricula.getxColumnaMax()) throw new RuntimeException("La columna inicial no puede ser mayor a al maximo de columnas de la cuadricula: " + cuadricula.getxColumnaMax());
-        if(yFila > cuadricula.getyFilaMax()) throw new RuntimeException("La fila inicial no puede ser mayor a al maximo de filas de la cuadricula: " + cuadricula.getyFilaMax());
+        if(xColumna <= 0 || yFila <= 0) throw new IllegalStartingPosition();
+        if(xColumna > cuadricula.getxColumnaMax()) throw new IllegalStartingPosition();
+        if(yFila > cuadricula.getyFilaMax()) throw new IllegalStartingPosition();
         this.cuadricula = cuadricula;
         this.xColumna = xColumna;
         this.yFila = yFila;
-        if(!(orientacion == 'N' || orientacion == 'S' || orientacion == 'E' || orientacion == 'O')) throw new IllegalArgumentException("La orientacion debe ser N, S, E o O");
+        if(!(orientacion == 'N' || orientacion == 'S' || orientacion == 'E' || orientacion == 'O')) throw new IllegalOrientationExeption();
         this.orientacion = orientacion;
     }
 
@@ -53,7 +57,7 @@ public class Robot {
     public void procesarComando(Comando comando) {
         if(comando.getOrden() == 'A') avanzar(comando.getParametro());
         else if(comando.getOrden() == 'R') rotar(comando.getParametro());
-        else throw new RuntimeException("El comando no es valido");
+        else throw new InvalidCommandExeption();
     }
 
     private void avanzar(int posiciones){
