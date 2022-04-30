@@ -33,6 +33,7 @@ public class ProcesadorDeDatos {
                 if (contador == 1) {
                     try {
                         String[] datos = linea.split(" ");
+                        if(datos.length > 5) throw new ExceedStartupParams();
                         int xColumna = Integer.parseInt(datos[0]);
                         int yFila = Integer.parseInt(datos[1]);
                         if (datos[2].length() != 1)
@@ -54,6 +55,9 @@ public class ProcesadorDeDatos {
                         throw e;
                     } catch (IllegalStartingPosition e) {
                         System.out.println("La posicion inicial debe ser mayor a 0 y menor a el maximo de la cuadricula");
+                        throw e;
+                    } catch (IllegalOrientationExeption e) {
+                        System.out.println("La orientacion debe ser 'N', 'S', 'E' o 'O'");
                         throw e;
                     } catch (ArrayIndexOutOfBoundsException e) {
                         System.out.println("Faltan datos en el archivo de entrada");
